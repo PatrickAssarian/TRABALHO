@@ -1,13 +1,14 @@
 public class ArmaDeDardos extends Itens{
-    private String nome;
-    public ArmaDeDardos(String nome) {
-        super(nome);
+    private int municao;
+    public ArmaDeDardos( String nome) {
+        super("Bastao Elétrico");
+        this.municao = 1;
     }
-    public String getNome() {
-        return nome;
+    public int getMunicao() {
+        return municao;
     }
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setMunicao(int municao) {
+        this.municao = municao;
     }
     
 }

@@ -1,4 +1,4 @@
-public class Itens{
+public abstract class Itens {
     private String nome;
     public Itens(String nome){
         this.nome = nome;
