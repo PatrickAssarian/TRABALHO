@@ -12,4 +12,7 @@ public class Mapa {
             }
         }
     }
+    public void gerarParedesAleatorias(){
+        
+    }
 }
