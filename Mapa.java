@@ -40,8 +40,8 @@ public class Mapa {
                 } else {
                     IO.print(" [ ] ");
                 }
-                
             }
+            IO.println();
             IO.println();
         }
     }

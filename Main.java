@@ -24,6 +24,9 @@ public class Main {
             IO.println("Obrigado por jogar! Até a próxima!");
             return;
         }
+        Mapa mapa = new Mapa(20);
+        mapa.gerarParedesAleatorias();
+        mapa.ImprimirMapa();
 
         scanner.close();
     }
