@@ -12,15 +12,19 @@ public class Main {
             dificuldade = scanner.nextInt();
             if (dificuldade == 1) {
                 percepcao = 3;
+                IO.println("Você ganhou 3 pontos de percepção!");
             } else if (dificuldade == 2) {
                 percepcao = 2;
+                IO.println("Você ganhou 2 pontos de percepção!");
             } else if(dificuldade == 3) {
                 percepcao = 1;
+                IO.println("Você ganhou 1 ponto de percepção!");
             }
         } else if (escolha == 2) {
             IO.println("Obrigado por jogar! Até a próxima!");
     
         }
+        
         scanner.close();
     }
 }
