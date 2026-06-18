@@ -27,7 +27,7 @@ public class Main {
         Mapa mapa = new Mapa(20);
         mapa.gerarParedesAleatorias();
         mapa.ImprimirMapa();
-
+        IO.println();
         scanner.close();
     }
 }
