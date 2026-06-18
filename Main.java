@@ -22,9 +22,9 @@ public class Main {
             }
         } else if (escolha == 2) {
             IO.println("Obrigado por jogar! Até a próxima!");
-    
+            IO.println("TESTE");
         }
-        
+
         scanner.close();
     }
 }
