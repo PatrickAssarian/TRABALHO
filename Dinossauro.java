@@ -5,5 +5,4 @@ public class Dinossauro extends Personagem {
     
     }
 
-    
 }

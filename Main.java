@@ -10,7 +10,7 @@ public class Main {
         if (escolha == 1) {
             IO.println("Dificuldade\n1 - Fácil\n2 - Médio\n3 - Difícil");
             dificuldade = scanner.nextInt();
-            if (dificuldade == 1) {
+            if (dificuldade == 1) {//trocar para switch case
                 percepcao = 3;
                 IO.println("Você ganhou 3 pontos de percepção!");
             } else if (dificuldade == 2) {
@@ -24,13 +24,10 @@ public class Main {
             IO.println("Obrigado por jogar! Até a próxima!");
             return;
         }
-        Mapa mapa = new Mapa(20);
+        Mapa mapa = new Mapa(10);
         mapa.gerarParedesAleatorias();
+        mapa.gerarDinossauros();
         mapa.ImprimirMapa();
-        IO.println("blabla");
-
-        IO.println("blabla");
-        IO.println("blabla");
         scanner.close();
     }
 }
