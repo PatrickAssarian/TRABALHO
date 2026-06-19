@@ -1,4 +1,5 @@
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
 public class Mapa {
     private int tamanho;
     private Celula[][] grade;
@@ -28,8 +29,12 @@ public class Mapa {
     public void gerarDinossauros(){
         int numerodeVelociraptors = 2;
         int numeroTroodonte = 6;
+        int numeroTiranossauroRex = 1;
+        int numeroCompsognato = 1;
+        int dinossauroCompsogonato = 0;
         int dinossaurosVelociraptor = 0;
         int dinossaurosTroodonte = 0;
+        int dinossaurosTiranossauroRex = 0;
 
         while(dinossaurosVelociraptor < numerodeVelociraptors){
             int x = ThreadLocalRandom.current().nextInt(0, tamanho);
@@ -48,6 +53,24 @@ public class Mapa {
                 Troodonte troodonte = new Troodonte(x, y);
                 grade[x][y].setDinossauro(troodonte);
                 dinossaurosTroodonte++;
+            }
+        }
+        while (dinossaurosTiranossauroRex < numeroTiranossauroRex) {
+            int x = ThreadLocalRandom.current().nextInt(0, tamanho);
+            int y = ThreadLocalRandom.current().nextInt(0, tamanho);
+            if (grade[x][y].getDinossauro() == null && !grade[x][y].isParede()) {
+                TiranossauroRex tiranossauroRex = new TiranossauroRex(x, y);
+                grade[x][y].setDinossauro(tiranossauroRex);
+                dinossaurosTiranossauroRex++;
+            }
+        }
+        while (dinossauroCompsogonato < numeroCompsognato) {
+            int x = ThreadLocalRandom.current().nextInt(0, tamanho);
+            int y = ThreadLocalRandom.current().nextInt(0, tamanho);
+            if (grade[x][y].getDinossauro() == null && !grade[x][y].isParede()) {
+                Compsognato compsognato = new Compsognato(x, y);
+                grade[x][y].setDinossauro(compsognato);
+                dinossaurosTiranossauroRex++;
             }
         }
         
@@ -80,5 +103,27 @@ public class Mapa {
             IO.println();
             IO.println();
         }
+    }
+    public void gerarCaixa(){
+        int totalCaixa = 4;
+        int caixasColocadas = 0;
+        int x, y;
+
+        while(caixasColocadas < totalCaixa){
+            ArrayList = 
+            x = ThreadLocalRandom.current().nextInt(0, tamanho);
+            y = ThreadLocalRandom.current().nextInt(0, tamanho);
+            Compsognato compsognato = new Compsognato(x, y);
+            CaixaSuprimentos Caixa = new CaixaSuprimentos(new KitMedico(), null);
+            CaixaSuprimentos bastao = new CaixaSuprimentos(new BastaoEletrico(), null);
+            CaixaSuprimentos arma1 = new CaixaSuprimentos(new ArmaDeDardos(), null);
+            CaixaSuprimentos arma2 = new CaixaSuprimentos(new ArmaDeDardos(), compsognato);
+
+            if(!grade[x][y].isParede() && grade[x][y].getDinossauro() == null && grade[x][y].getCaixa() == null){
+                grade[x][y] = 
+            }
+            
+        }
+
     }
 }

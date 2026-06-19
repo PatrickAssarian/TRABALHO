@@ -1,6 +1,6 @@
 public class BastaoEletrico extends Itens{
   
-    public BastaoEletrico(String nome){
+    public BastaoEletrico(){
         super("Bastão Elétrico");
     }
 }

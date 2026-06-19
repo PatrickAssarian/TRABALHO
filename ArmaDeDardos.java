@@ -1,7 +1,7 @@
 public class ArmaDeDardos extends Itens{
     private int municao;
-    public ArmaDeDardos( String nome) {
-        super("Bastao Elétrico");
+    public ArmaDeDardos() {
+        super("Arma de Dardos Tranquilizantes");
         this.municao = 1;
     }
     public int getMunicao() {
