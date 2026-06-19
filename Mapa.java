@@ -1,5 +1,5 @@
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 public class Mapa {
     private int tamanho;
     private Celula[][] grade;
@@ -110,17 +110,25 @@ public class Mapa {
         int x, y;
 
         while(caixasColocadas < totalCaixa){
-            ArrayList = 
             x = ThreadLocalRandom.current().nextInt(0, tamanho);
             y = ThreadLocalRandom.current().nextInt(0, tamanho);
+            
             Compsognato compsognato = new Compsognato(x, y);
             CaixaSuprimentos Caixa = new CaixaSuprimentos(new KitMedico(), null);
             CaixaSuprimentos bastao = new CaixaSuprimentos(new BastaoEletrico(), null);
             CaixaSuprimentos arma1 = new CaixaSuprimentos(new ArmaDeDardos(), null);
             CaixaSuprimentos arma2 = new CaixaSuprimentos(new ArmaDeDardos(), compsognato);
 
+            ArrayList<CaixaSuprimentos> estoqueDeCaixa = new ArrayList<>();
+            estoqueDeCaixa.add(Caixa);
+            estoqueDeCaixa.add(bastao);
+            estoqueDeCaixa.add(arma1);
+            estoqueDeCaixa.add(arma2);
+
             if(!grade[x][y].isParede() && grade[x][y].getDinossauro() == null && grade[x][y].getCaixa() == null){
-                grade[x][y] = 
+                while (caixasColocadas < 4) {
+                    
+                }
             }
             
         }
