@@ -1,6 +1,6 @@
 public class CaixaSuprimentos {
-    private Itens itemGuardado;
-    private Dinossauro dinossauroSurpresa;
+    private final Itens itemGuardado;
+    private final Dinossauro dinossauroSurpresa;
     
     public CaixaSuprimentos(Itens itemGuardado, Dinossauro dinossauroSurpresa) {
         this.itemGuardado = itemGuardado;

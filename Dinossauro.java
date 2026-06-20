@@ -4,5 +4,5 @@ public class Dinossauro extends Personagem {
         super(saude, posicaox, posicaoy);
     
     }
-
 }
+                        

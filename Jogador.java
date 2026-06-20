@@ -1,15 +1,15 @@
 public class Jogador extends Personagem {
-    private int percepcao;
+    private int saude;
 
-    public Jogador(int percepcao, int posicaox, int posicaoy) {
+    public Jogador(int saude, int posicaox, int posicaoy) {
         super(5, posicaox, posicaoy);
-        this.percepcao = percepcao;
+        this.saude = saude;
     }
 
     public int getPercepcao() {
-        return percepcao;
+        return saude;
     }
     public void setPercepcao(int percepcao) {
-        this.percepcao = percepcao;
+        this.saude = percepcao;
     }
 }

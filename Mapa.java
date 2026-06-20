@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 public class Mapa {
-    private int tamanho;
-    private Celula[][] grade;
+    private final int tamanho;
+    private final Celula[][] grade;
 
     public Mapa(int tamanho) {
         this.tamanho = tamanho;
@@ -31,7 +31,7 @@ public class Mapa {
         int numeroTroodonte = 6;
         int numeroTiranossauroRex = 1;
         int numeroCompsognato = 1;
-        int dinossauroCompsogonato = 0;
+        int dinossauroCompsognato = 0;
         int dinossaurosVelociraptor = 0;
         int dinossaurosTroodonte = 0;
         int dinossaurosTiranossauroRex = 0;
@@ -64,16 +64,15 @@ public class Mapa {
                 dinossaurosTiranossauroRex++;
             }
         }
-        while (dinossauroCompsogonato < numeroCompsognato) {
+        while (dinossauroCompsognato < numeroCompsognato) {
             int x = ThreadLocalRandom.current().nextInt(0, tamanho);
             int y = ThreadLocalRandom.current().nextInt(0, tamanho);
-            if (grade[x][y].getDinossauro() == null && !grade[x][y].isParede()) {
+            if(grade[x][y].getDinossauro() == null && !grade[x][y].isParede()) {
                 Compsognato compsognato = new Compsognato(x, y);
                 grade[x][y].setDinossauro(compsognato);
-                dinossaurosTiranossauroRex++;
-            }
+                dinossauroCompsognato++;
+           }
         }
-        
     }
     public void ImprimirMapa(){
         IO.println("     ___ MAPA DO PARQUE ___");
@@ -82,7 +81,7 @@ public class Mapa {
                 if(grade[i][j].isParede()){
                     IO.print(" [#] ");
                 } else if(grade[i][j].getJogador() != null){
-                    IO.print(" [J] ");
+                    IO.print(" [P] ");
                 } else if(grade[i][j].getDinossauro() != null){
                     Dinossauro dino = grade[i][j].getDinossauro();
                     if (dino instanceof Velociraptor) {
@@ -91,11 +90,14 @@ public class Mapa {
                     else if (dino instanceof Troodonte) {
                         IO.print(" [T] ");
                     }
-                    else if (dino instanceof TiranossauroRex) {
+                    else if (dino instanceof TiranossauroRex){
                         IO.print(" [R] ");
                     }
+                    else if (dino instanceof Compsognato){
+                        IO.print(" [C] ");
+                    }
                 } else if(grade[i][j].getCaixa() != null){
-                    IO.print(" [C] ");
+                    IO.print(" [X] ");
                 } else {
                     IO.print(" [ ] ");
                 }
@@ -110,10 +112,9 @@ public class Mapa {
         int x, y;
 
         while(caixasColocadas < totalCaixa){
-            x = ThreadLocalRandom.current().nextInt(0, tamanho);
-            y = ThreadLocalRandom.current().nextInt(0, tamanho);
+
             
-            Compsognato compsognato = new Compsognato(x, y);
+            Compsognato compsognato = new Compsognato(-1, -1);
             CaixaSuprimentos Caixa = new CaixaSuprimentos(new KitMedico(), null);
             CaixaSuprimentos bastao = new CaixaSuprimentos(new BastaoEletrico(), null);
             CaixaSuprimentos arma1 = new CaixaSuprimentos(new ArmaDeDardos(), null);
@@ -124,14 +125,31 @@ public class Mapa {
             estoqueDeCaixa.add(bastao);
             estoqueDeCaixa.add(arma1);
             estoqueDeCaixa.add(arma2);
-
-            if(!grade[x][y].isParede() && grade[x][y].getDinossauro() == null && grade[x][y].getCaixa() == null){
-                while (caixasColocadas < 4) {
-                    
+            while (caixasColocadas < totalCaixa){
+                x = ThreadLocalRandom.current().nextInt(0, tamanho);
+                y = ThreadLocalRandom.current().nextInt(0, tamanho);
+                if(!grade[x][y].isParede() && grade[x][y].getDinossauro() == null && grade[x][y].getCaixa() == null){
+                    CaixaSuprimentos caixaDaVez = estoqueDeCaixa.get(caixasColocadas);
+                    if(caixaDaVez.getDinossauroSurpresa() != null){
+                        caixaDaVez.getDinossauroSurpresa().setPosicaox(x);
+                        caixaDaVez.getDinossauroSurpresa().setPosicaoy(y);
+                    }
+                    grade[x][y].setCaixa(caixaDaVez);
+                    caixasColocadas++;
                 }
-            }
-            
+            }  
         }
-
+    }
+    public void gerarPersonagem(){
+        int personagemColocado = 0;
+        while(personagemColocado < 1){
+            int x = ThreadLocalRandom.current().nextInt(0, tamanho);
+            int y = ThreadLocalRandom.current().nextInt(0, tamanho);
+            Jogador jogador = new Jogador(5, x, y);
+            if(!grade[x][y].isParede() && grade[x][y].getDinossauro() == null && grade[x][y].getCaixa() == null){
+                grade[x][y].setJogador(jogador);
+                personagemColocado++;
+            }
+        }
     }
 }

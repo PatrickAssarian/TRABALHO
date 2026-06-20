@@ -5,12 +5,15 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         IO.println("SEJA BEM VINDO À SOBREVIVÊNCIA JURÁSSICA!\naperte enter para começar...");
         scanner.nextLine();
+
+
         IO.println("MENU\n1 - Jogar\n2 - Sair");
         int escolha = scanner.nextInt();
         if (escolha == 1) {
-            IO.println("Dificuldade\n1 - Fácil\n2 - Médio\n3 - Difícil");
-            dificuldade = scanner.nextInt();
+            
             while(opcaoSwitch != 1){
+                IO.println("Dificuldade\n1 - Fácil\n2 - Médio\n3 - Difícil");
+                dificuldade = scanner.nextInt();
                 switch (dificuldade) {
                     case 1 -> {
                         percepcao = 3;
@@ -23,14 +26,12 @@ public class Main {
                         opcaoSwitch = 1;
                     } 
                     case 3 ->{
-                        percepcao = 1;
+                        percepcao = 1;                      
                         IO.println("Você ganhou 1 ponto de percepção!");
                         opcaoSwitch = 1;
                     } 
                     default -> {
-                        IO.println("OPÇÃO INVÁLIDA!, digite a dificuldade novamente!");
-                        IO.println("Dificuldade\n1 - Fácil\n2 - Médio\n3 - Difícil");
-                        dificuldade = scanner.nextInt();    
+                        IO.println("OPÇÃO INVÁLIDA!, digite a dificuldade novamente!"); 
                     }
                 }
             }
@@ -38,10 +39,13 @@ public class Main {
         } else if (escolha == 2) {
             IO.println("Obrigado por jogar! Até a próxima!");
         }
-        Mapa mapa = new Mapa(10);
+        Mapa mapa = new Mapa(10);        
         mapa.gerarParedesAleatorias();
         mapa.gerarDinossauros();
+        mapa.gerarCaixa();
+        mapa.gerarPersonagem();
         mapa.ImprimirMapa();
+        scanner.close();
         scanner.close();
     }
 }
