@@ -35,17 +35,17 @@ public class Main {
                     }
                 }
             }
+            Mapa mapa = new Mapa(10);        
+            mapa.gerarParedesAleatorias();
+            mapa.gerarDinossauros();
+            mapa.gerarCaixa();
+            Jogador jogador = mapa.gerarPersonagem();
+            mapa.gerarTiranossauroRex(jogador,10);
+            mapa.ImprimirMapa();
             
         } else if (escolha == 2) {
             IO.println("Obrigado por jogar! Até a próxima!");
         }
-        Mapa mapa = new Mapa(10);        
-        mapa.gerarParedesAleatorias();
-        mapa.gerarDinossauros();
-        mapa.gerarCaixa();
-        mapa.gerarPersonagem();
-        mapa.ImprimirMapa();
-        scanner.close();
         scanner.close();
     }
 }
