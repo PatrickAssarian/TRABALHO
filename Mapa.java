@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 public class Mapa {
     private final int tamanho;
@@ -130,13 +131,13 @@ public class Mapa {
             }  
         }
     }
-    public Jogador gerarPersonagem(){
+    public Jogador gerarPersonagem(int percepcao){
         int personagemColocado = 0;
         Jogador jogador = null;
         while(personagemColocado < 1){
             int x = ThreadLocalRandom.current().nextInt(0, tamanho);
             int y = ThreadLocalRandom.current().nextInt(0, tamanho);
-            jogador = new Jogador(5, x, y);
+            jogador = new Jogador(percepcao, 5, x, y);
             if(!grade[x][y].isParede() && grade[x][y].getDinossauro() == null && grade[x][y].getCaixa() == null){
                 grade[x][y].setJogador(jogador);
                 personagemColocado++;
@@ -174,6 +175,13 @@ public class Mapa {
         grade[posicaoTx][posicaoTy].setDinossauro(tiranossauroRex);
     }
     public void movimentoPersonagem(Jogador jogador){
-        
+        Scanner scanf = new Scanner(System.in);
+        String comando;
+        IO.println("Use WASD para movimentar:");
+        comando = scanf.nextLine();
+        if(comando == "w"){
+            
+        }
+        scanf.close();
     }
 }

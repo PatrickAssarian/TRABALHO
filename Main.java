@@ -1,11 +1,11 @@
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
-        int percepcao, dificuldade, opcaoSwitch = 0;
+        int percepcao = 0, dificuldade, opcaoSwitch = 0;
+        boolean jogoRodando = true;
         Scanner scanner = new Scanner(System.in);
         IO.println("SEJA BEM VINDO À SOBREVIVÊNCIA JURÁSSICA!\naperte enter para começar...");
         scanner.nextLine();
-
 
         IO.println("MENU\n1 - Jogar\n2 - Sair");
         int escolha = scanner.nextInt();
@@ -35,13 +35,17 @@ public class Main {
                     }
                 }
             }
-            Mapa mapa = new Mapa(10);        
+            Mapa mapa = new Mapa(20);
             mapa.gerarParedesAleatorias();
             mapa.gerarDinossauros();
             mapa.gerarCaixa();
-            Jogador jogador = mapa.gerarPersonagem();
-            mapa.gerarTiranossauroRex(jogador,10);
-            mapa.ImprimirMapa();
+            Jogador jogador = mapa.gerarPersonagem(percepcao);
+            mapa.gerarTiranossauroRex(jogador,20);
+            while (jogoRodando) {        
+                mapa.ImprimirMapa();
+                    
+            }
+            
             
         } else if (escolha == 2) {
             IO.println("Obrigado por jogar! Até a próxima!");
