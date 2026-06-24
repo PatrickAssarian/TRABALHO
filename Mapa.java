@@ -174,12 +174,39 @@ public class Mapa {
         TiranossauroRex tiranossauroRex = new TiranossauroRex(posicaoTx, posicaoTy);
         grade[posicaoTx][posicaoTy].setDinossauro(tiranossauroRex);
     }
-    public void movimentoPersonagem(Jogador jogador){
+    public void movimentoPersonagem(Jogador jogador, Mapa mapa){
         Scanner scanf = new Scanner(System.in);
-        String comando;
-        IO.println("Use WASD para movimentar:");
-        comando = scanf.nextLine();
-        if(comando == "w"){
+        char comando;
+        int posicaoX, posicaoY;
+        
+        int rodando = 1;
+        while (rodando != 0) {
+            IO.println("Use WASD para movimentar:");
+            comando = scanf.next().charAt(0);
+            scanf.nextLine();
+            posicaoY = jogador.getPosicaoy();
+            posicaoX = jogador.getPosicaox();
+            int antigoX = posicaoX;
+            int antigoY = posicaoY;
+            int teste;
+            if(comando == 'w'){
+                teste = posicaoY - 1;
+                if (teste != null) {
+                    
+                }
+                posicaoY = antigoY - 1;
+            }else if (comando == 's') {
+                posicaoY = antigoY + 1;
+            }else if (comando == 'a') {
+                posicaoX = antigoX - 1;
+            }else if (comando == 'd') {
+                posicaoX = antigoX+1;
+            }
+            grade[antigoX][antigoY].setJogador(null);
+            jogador.setPosicaox(posicaoX);
+            jogador.setPosicaoy(posicaoY);
+            grade[posicaoX][posicaoX].setJogador(jogador);
+            mapa.ImprimirMapa();
             
         }
         scanf.close();

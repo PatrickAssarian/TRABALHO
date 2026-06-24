@@ -41,10 +41,8 @@ public class Main {
             mapa.gerarCaixa();
             Jogador jogador = mapa.gerarPersonagem(percepcao);
             mapa.gerarTiranossauroRex(jogador,20);
-            while (jogoRodando) {        
-                mapa.ImprimirMapa();
-                    
-            }
+            mapa.ImprimirMapa();
+            mapa.movimentoPersonagem(jogador, mapa);
             
             
         } else if (escolha == 2) {
