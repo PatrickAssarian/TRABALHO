@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+
 public class Mapa {
     private final int tamanho;
     private final Celula[][] grade;
+    private boolean modoDebug = false;
 
     public Mapa(int tamanho) {
         this.tamanho = tamanho;
@@ -29,12 +31,11 @@ public class Mapa {
     }
     public void gerarDinossauros(){
         int numerodeVelociraptors = 2;
-        int numeroTroodonte = 6;
-        int numeroCompsognato = 1;
+        int numeroTroodonte = 5;
+        int numeroCompsognato = 2;
         int dinossauroCompsognato = 0;
         int dinossaurosVelociraptor = 0;
         int dinossaurosTroodonte = 0;
-
 
         while(dinossaurosVelociraptor < numerodeVelociraptors){
             int x = ThreadLocalRandom.current().nextInt(0, tamanho);
@@ -65,36 +66,47 @@ public class Mapa {
            }
         }
     }
-    public void ImprimirMapa(){
-        IO.println("     ___ MAPA DO PARQUE ___");
-        for(int i = 0; i < tamanho; i++){
-            for(int j = 0; j < tamanho; j++){
-                if(grade[i][j].isParede()){
-                    IO.print(" [#] ");
-                } else if(grade[i][j].getJogador() != null){
-                    IO.print(" [P] ");
-                } else if(grade[i][j].getDinossauro() != null){
-                    Dinossauro dino = grade[i][j].getDinossauro();
-                    if (dino instanceof Velociraptor) {
-                        IO.print(" [V] ");
+    public void ImprimirMapa(Jogador jogador) { 
+        IO.println("\n___ MAPA DO PARQUE ___");
+        
+        int jx = jogador.getPosicaox();
+        int jy = jogador.getPosicaoy();
+
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                
+                // O Jogador sempre é impresso
+                if (i == jx && j == jy) {
+                    System.out.print("[P] ");
+                    continue; 
+                }
+                
+                // A MÁGICA ACONTECE AQUI: A célula será desenhada se o DEBUG estiver ligado 
+                // OU se estiver na linha de visão do jogador!
+                boolean visivel = modoDebug || estaNaLinhaDeVisao(jx, jy, i, j);
+
+                if (visivel) {
+                    if (grade[i][j].isParede()) {
+                        System.out.print("[#] ");
+                    } else if (grade[i][j].getDinossauro() instanceof TiranossauroRex) {
+                        System.out.print("[R] ");
+                    } else if (grade[i][j].getDinossauro() instanceof Velociraptor) {
+                        System.out.print("[V] ");
+                    } else if (grade[i][j].getDinossauro() instanceof Troodonte) {
+                        System.out.print("[T] ");
+                    } else if (grade[i][j].getDinossauro() instanceof Compsognato) {
+                        System.out.print("[C] ");
+                    } else if (grade[i][j].getCaixa() != null) {
+                        System.out.print("[X] ");
+                    } else {
+                        System.out.print("[ ] "); // Caminho livre iluminado
                     }
-                    else if (dino instanceof Troodonte) {
-                        IO.print(" [T] ");
-                    }
-                    else if (dino instanceof TiranossauroRex){
-                        IO.print(" [R] ");
-                    }
-                    else if (dino instanceof Compsognato){
-                        IO.print(" [C] ");
-                    }
-                } else if(grade[i][j].getCaixa() != null){
-                    IO.print(" [X] ");
                 } else {
-                    IO.print(" [ ] ");
+                    // Células escondidas pela "Neblina de Guerra" (Fora da visão e Debug desligado)
+                    System.out.print("[ ] "); 
                 }
             }
-            IO.println();
-            IO.println();
+            System.out.println(); // Quebra de linha da matriz
         }
     }
     public void gerarCaixa(){
@@ -104,7 +116,6 @@ public class Mapa {
 
         while(caixasColocadas < totalCaixa){
 
-            
             Compsognato compsognato = new Compsognato(-1, -1);
             CaixaSuprimentos Caixa = new CaixaSuprimentos(new KitMedico(), null);
             CaixaSuprimentos bastao = new CaixaSuprimentos(new BastaoEletrico(), null);
@@ -181,11 +192,12 @@ public class Mapa {
 
             while (rodando != 0) {
                 if (jogador.getKitsMedicos() > 0) {
-                    IO.println("Use WASD para mover, C para curar (ou 0 para sair):");
+                    IO.println("Use WASD para mover, C para curar, X para Debug (ou 0 para sair):");
                 } else {
-                    IO.println("Use WASD para movimentar (ou 0 para sair):");
+                    IO.println("Use WASD para movimentar, X para Debug (ou 0 para sair):");
                 }
                 comando = scanf.next().charAt(0);
+                comando = Character.toLowerCase(comando); // Garante que letras maiúsculas também funcionem
                 scanf.nextLine();
 
                 if (comando == '0') {
@@ -201,6 +213,15 @@ public class Mapa {
                     case 's'-> { proximoX = proximoX + 1; }
                     case 'a'-> { proximoY = proximoY - 1; }
                     case 'd'-> { proximoY = proximoY + 1; }
+                    
+                    // --- MODO DEBUG IMPLEMENTADO AQUI ---
+                    case 'x'-> {
+                        modoDebug = !modoDebug; // Inverte o valor da variável de visão
+                        IO.println("\n🛠️ MODO DEBUG " + (modoDebug ? "ATIVADO" : "DESATIVADO") + " 🛠️");
+                        mapa.ImprimirMapa(jogador);
+                        continue; // Recomeça o laço sem os dinossauros andarem nesse turno
+                    }
+                    
                     case 'c'-> {
                         if (jogador.getKitsMedicos() > 0) {
                             if (jogador.getSaude() < 5) {
@@ -217,7 +238,7 @@ public class Mapa {
                     default-> { IO.println("Comando inválido!"); }
                 }
 
-                if (comando != 'c') {
+                if (comando != 'c' && comando != 'x') { // Adicionado o && comando != 'x' para proteger o passo falso
                     if (proximoX >= 0 && proximoX < tamanho && proximoY >= 0 && proximoY < tamanho) {
                         
                        if (!grade[proximoX][proximoY].isParede()) {
@@ -274,37 +295,40 @@ public class Mapa {
                         }
                     }
                 }
+                
+                // O método de mover dinossauros é chamado normalmente ao caminhar
                 mapa.movimentarDinossauros(jogador, scanf);
                 
                 if (jogador.getSaude() <= 0) {
                     IO.println("\n GAME OVER! Você não aguentou os ferimentos e morreu!!");
                     rodando = 0;
                 }else{
-                    mapa.ImprimirMapa();
+                    mapa.ImprimirMapa(jogador);
                     mapa.exibirStatusJogador(jogador);
                 }  
             }
         }
     }
     public void exibirStatusJogador(Jogador jogador) {
-    IO.println("--- STATUS ---");
-    
-    // Puxa a vida atual do jogador
-    IO.println("Vida: " + jogador.getSaude());
-    
-    if (jogador.isTemArma()) {
-        IO.println("Arma: Equipada");
-        IO.println("Munição: " + jogador.getMunicao());
-    } else {
-        IO.println("Arma: Nenhuma");
+        IO.println("--- STATUS ---");
+        
+        // Puxa a vida atual do jogador
+        IO.println("Vida: " + jogador.getSaude());
+        IO.println("Percepção "+ jogador.getPercepcao());
+        
+        if (jogador.isTemArma()) {
+            IO.println("Arma: Equipada");
+            IO.println("Munição: " + jogador.getMunicao());
+        } else {
+            IO.println("Arma: Nenhuma");
+        }
+        
+        IO.println("Kits Médicos: " + jogador.getKitsMedicos());
+        
+        IO.println("--------------");
     }
-    
-    IO.println("Kits Médicos: " + jogador.getKitsMedicos());
-    
-    IO.println("--------------");
-}
     public boolean iniciarCombate(Jogador jogador, Dinossauro inimigo, Scanner scanf) {
-    IO.println("\nCOMBATE INICIADO! ");
+        IO.println("\nCOMBATE INICIADO! ");
     
         while (jogador.getSaude() > 0 && inimigo.getSaude() > 0) {
             IO.println("\nVida do Jogador: " + jogador.getSaude() + " HP | Vida do Inimigo: " + inimigo.getSaude() + " HP");
@@ -388,15 +412,15 @@ public class Mapa {
                 inimigo.setSaude(inimigo.getSaude() - danoCausado);
                 
                 if (inimigo.getSaude() > 0) {
-                    IO.println("🦖 O dinossauro avança para morder você!");
-                    int dadoDefesa = ThreadLocalRandom.current().nextInt(1, 4); // Dado de 3 lados [cite: 107]
+                    IO.println("O dinossauro avança para morder você!");
+                    int dadoDefesa = ThreadLocalRandom.current().nextInt(1, 4);
                     
                     if (dadoDefesa <= jogador.getPercepcao()) {
-                        IO.println("[ESQUIVA!] Seus reflexos baseados na percepção fizeram você desviar do bote!"); // [cite: 108]
+                        IO.println("[ESQUIVA!] Seus reflexos baseados na percepção fizeram você desviar do bote!");
                     } else {
                         int danoSofrido = (inimigo instanceof TiranossauroRex) ? 2 : 1;
                         jogador.setSaude(jogador.getSaude() - danoSofrido);
-                        IO.println("[DANO!] Você foi atingido e perdeu " + danoSofrido + " ponto(s) de vida!"); // [cite: 109]
+                        IO.println("[DANO!] Você foi atingido e perdeu " + danoSofrido + " ponto(s) de vida!");
                     }
                 }
             }
@@ -404,9 +428,10 @@ public class Mapa {
     
         return inimigo.getSaude() <= 0;
     }
-    public void movimentarDinossauros(Jogador jogador, Scanner scanf) {//se eu não passar o scanf por parametro, no segundo combate o scanf que eu criar novamente dentro do novo método será destruido autoaticamente, e dará erro
+    public void movimentarDinossauros(Jogador jogador, Scanner scanf) {
         ArrayList<Dinossauro> dinossaurosParaMover = new ArrayList<>();
         
+        // 1. Coleta quem pode se mover (O T-Rex fica de fora por regra do jogo)
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 Dinossauro dino = grade[i][j].getDinossauro();
@@ -417,44 +442,87 @@ public class Mapa {
         }
         
         for (Dinossauro dino : dinossaurosParaMover) {
-            // Pega as posições atuais (Assumindo que Dinossauro herda getPosicaox/y de Personagem)
-            int xAtual = dino.getPosicaox();
-            int yAtual = dino.getPosicaoy();
-            int novoX = xAtual;
-            int novoY = yAtual;
             
-            int direcao = ThreadLocalRandom.current().nextInt(0, 4);
-            switch(direcao) {
-                case 0 -> novoX--;
-                case 1 -> novoX++;
-                case 2 -> novoY--;
-                case 3 -> novoY++;
-            }
+            int quantidadeDePassos = (dino instanceof Velociraptor) ? 2 : 1;
             
-            if (novoX >= 0 && novoX < tamanho && novoY >= 0 && novoY < tamanho) {
+            for (int passo = 0; passo < quantidadeDePassos; passo++) {
+                int xAtual = dino.getPosicaox();
+                int yAtual = dino.getPosicaoy();
+                int novoX = xAtual;
+                int novoY = yAtual;
                 
-                if (!grade[novoX][novoY].isParede() && grade[novoX][novoY].getDinossauro() == null) {
-                    
-                    grade[xAtual][yAtual].setDinossauro(null);
-                    
-                    dino.setPosicaox(novoX);
-                    dino.setPosicaoy(novoY);
-                    
-                    grade[novoX][novoY].setDinossauro(dino);
-                    
-                    if (novoX == jogador.getPosicaox() && novoY == jogador.getPosicaoy()) {
-                        IO.println("\n ALERTA: Um " + dino.getClass().getSimpleName() + " encontrou você!");
+                int direcao = ThreadLocalRandom.current().nextInt(0, 4);
+                
+                switch(direcao) {
+                    case 0 -> novoX--;
+                    case 1 -> novoX++;
+                    case 2 -> novoY--;
+                    case 3 -> novoY++;
+                }
+                
+                if (novoX >= 0 && novoX < tamanho && novoY >= 0 && novoY < tamanho) {
+                    if (!grade[novoX][novoY].isParede() && grade[novoX][novoY].getDinossauro() == null) {
                         
-                        boolean vitoria = iniciarCombate(jogador, dino, scanf);
+                        grade[xAtual][yAtual].setDinossauro(null);
+                        dino.setPosicaox(novoX);
+                        dino.setPosicaoy(novoY);
+                        grade[novoX][novoY].setDinossauro(dino);
                         
-                        if (vitoria) {
-                            grade[novoX][novoY].setDinossauro(null);
-                        } else if (jogador.getSaude() <= 0) {
-                            return; 
+                        if (novoX == jogador.getPosicaox() && novoY == jogador.getPosicaoy()) {
+                            IO.println("\nALERTA: Um " + dino.getClass().getSimpleName() + " encontrou você!");
+                            
+                            boolean vitoria = iniciarCombate(jogador, dino, scanf);
+                            
+                            if (vitoria) {
+                                grade[novoX][novoY].setDinossauro(null);
+                                break; 
+                            } else if (jogador.getSaude() <= 0) {
+                                return; 
+                            } else {
+                                break; 
+                            }
                         }
                     }
                 }
             }
         }
+    }
+    private boolean estaNaLinhaDeVisao(int jogadorX, int jogadorY, int alvoX, int alvoY) {
+        // 1. O próprio jogador sempre é visível
+        if (jogadorX == alvoX && jogadorY == alvoY) return true;
+
+        // 2. Se não estiver na mesma linha nem na mesma coluna, o alvo está na diagonal (Ponto Cego)
+        if (jogadorX != alvoX && jogadorY != alvoY) return false;
+
+        // 3. Verificando a linha de visão HORIZONTAL (Eixo X igual)
+        if (jogadorX == alvoX) {
+            int inicio = Math.min(jogadorY, alvoY);
+            int fim = Math.max(jogadorY, alvoY);
+            
+            // O laço verifica apenas o 'meio do caminho' (inicio + 1 até fim - 1)
+            for (int k = inicio + 1; k < fim; k++) {
+                if (grade[jogadorX][k].isParede() || 
+                    grade[jogadorX][k].getDinossauro() != null || 
+                    grade[jogadorX][k].getCaixa() != null) {
+                    return false; // A luz bateu em um obstáculo antes de chegar no alvo!
+                }
+            }
+        }
+        // 4. Verificando a linha de visão VERTICAL (Eixo Y igual)
+        else if (jogadorY == alvoY) {
+            int inicio = Math.min(jogadorX, alvoX);
+            int fim = Math.max(jogadorX, alvoX);
+            
+            for (int k = inicio + 1; k < fim; k++) {
+                if (grade[k][jogadorY].isParede() || 
+                    grade[k][jogadorY].getDinossauro() != null || 
+                    grade[k][jogadorY].getCaixa() != null) {
+                    return false; // A luz bateu em um obstáculo antes de chegar no alvo!
+                }
+            }
+        }
+
+        // Se o laço terminou e não esbarrou em nada no caminho, o alvo é visível!
+        return true;
     }
 }
