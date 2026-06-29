@@ -66,7 +66,7 @@ public class Mapa {
            }
         }
     }
-    public void ImprimirMapa(Jogador jogador) { 
+    public void ImprimirMapa(Jogador jogador) {
         IO.println("\n___ MAPA DO PARQUE ___");
         
         int jx = jogador.getPosicaox();
@@ -75,14 +75,11 @@ public class Mapa {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 
-                // O Jogador sempre é impresso
                 if (i == jx && j == jy) {
                     System.out.print("[P] ");
                     continue; 
                 }
                 
-                // A MÁGICA ACONTECE AQUI: A célula será desenhada se o DEBUG estiver ligado 
-                // OU se estiver na linha de visão do jogador!
                 boolean visivel = modoDebug || estaNaLinhaDeVisao(jx, jy, i, j);
 
                 if (visivel) {
@@ -99,14 +96,13 @@ public class Mapa {
                     } else if (grade[i][j].getCaixa() != null) {
                         System.out.print("[X] ");
                     } else {
-                        System.out.print("[ ] "); // Caminho livre iluminado
+                        System.out.print("[ ] "); 
                     }
                 } else {
-                    // Células escondidas pela "Neblina de Guerra" (Fora da visão e Debug desligado)
                     System.out.print("[ ] "); 
                 }
             }
-            System.out.println(); // Quebra de linha da matriz
+            System.out.println(); 
         }
     }
     public void gerarCaixa(){
@@ -157,7 +153,6 @@ public class Mapa {
         return jogador;
     }
     public void gerarTiranossauroRex(Jogador jogador, int tamanhoDoMapa){
-        //tamanho do mapa - 1 = resultado - posiçãoJogador = resultado2
         int tamanhoMaximo = tamanhoDoMapa - 1; 
         int posicaoTx = tamanhoMaximo - jogador.getPosicaox();
         int posicaoTy = tamanhoMaximo - jogador.getPosicaoy();
@@ -177,7 +172,6 @@ public class Mapa {
             minY = 0;
             maxY = metadeMapa;
         }
-        //enquanto este local tiver uma parede, ou tiver um dinossauro ou tiver uma caixa eu mudo de posição
         while(grade[posicaoTx][posicaoTy].isParede() || grade[posicaoTx][posicaoTy].getDinossauro() != null || grade[posicaoTx][posicaoTy].getCaixa() != null){
            posicaoTx = ThreadLocalRandom.current().nextInt(minX, maxX);
            posicaoTy = ThreadLocalRandom.current().nextInt(minY, maxY);
@@ -213,15 +207,11 @@ public class Mapa {
                     case 's'-> { proximoX = proximoX + 1; }
                     case 'a'-> { proximoY = proximoY - 1; }
                     case 'd'-> { proximoY = proximoY + 1; }
-                    
-                    // --- MODO DEBUG IMPLEMENTADO AQUI ---
                     case 'x'-> {
-                        modoDebug = !modoDebug; // Inverte o valor da variável de visão
-                        IO.println("\n🛠️ MODO DEBUG " + (modoDebug ? "ATIVADO" : "DESATIVADO") + " 🛠️");
+                        IO.println("\n MODO DEBUG " + (modoDebug ? "ATIVADO" : "DESATIVADO"));
                         mapa.ImprimirMapa(jogador);
-                        continue; // Recomeça o laço sem os dinossauros andarem nesse turno
+                        continue; 
                     }
-                    
                     case 'c'-> {
                         if (jogador.getKitsMedicos() > 0) {
                             if (jogador.getSaude() < 5) {
@@ -237,8 +227,7 @@ public class Mapa {
                     }
                     default-> { IO.println("Comando inválido!"); }
                 }
-
-                if (comando != 'c' && comando != 'x') { // Adicionado o && comando != 'x' para proteger o passo falso
+                if (comando != 'c' && comando != 'x') { 
                     if (proximoX >= 0 && proximoX < tamanho && proximoY >= 0 && proximoY < tamanho) {
                         
                        if (!grade[proximoX][proximoY].isParede()) {
@@ -257,7 +246,6 @@ public class Mapa {
                                     jogador.setPosicaoy(proximoY);
                                     grade[proximoX][proximoY].setJogador(jogador);
                                 }   
-                            
                             } else {
                                 grade[xAntigo][yAntigo].setJogador(null);
                                 
@@ -296,7 +284,6 @@ public class Mapa {
                     }
                 }
                 
-                // O método de mover dinossauros é chamado normalmente ao caminhar
                 mapa.movimentarDinossauros(jogador, scanf);
                 
                 if (jogador.getSaude() <= 0) {
@@ -312,7 +299,6 @@ public class Mapa {
     public void exibirStatusJogador(Jogador jogador) {
         IO.println("--- STATUS ---");
         
-        // Puxa a vida atual do jogador
         IO.println("Vida: " + jogador.getSaude());
         IO.println("Percepção "+ jogador.getPercepcao());
         
@@ -431,7 +417,6 @@ public class Mapa {
     public void movimentarDinossauros(Jogador jogador, Scanner scanf) {
         ArrayList<Dinossauro> dinossaurosParaMover = new ArrayList<>();
         
-        // 1. Coleta quem pode se mover (O T-Rex fica de fora por regra do jogo)
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 Dinossauro dino = grade[i][j].getDinossauro();
@@ -488,27 +473,22 @@ public class Mapa {
         }
     }
     private boolean estaNaLinhaDeVisao(int jogadorX, int jogadorY, int alvoX, int alvoY) {
-        // 1. O próprio jogador sempre é visível
         if (jogadorX == alvoX && jogadorY == alvoY) return true;
 
-        // 2. Se não estiver na mesma linha nem na mesma coluna, o alvo está na diagonal (Ponto Cego)
         if (jogadorX != alvoX && jogadorY != alvoY) return false;
 
-        // 3. Verificando a linha de visão HORIZONTAL (Eixo X igual)
         if (jogadorX == alvoX) {
             int inicio = Math.min(jogadorY, alvoY);
             int fim = Math.max(jogadorY, alvoY);
             
-            // O laço verifica apenas o 'meio do caminho' (inicio + 1 até fim - 1)
             for (int k = inicio + 1; k < fim; k++) {
                 if (grade[jogadorX][k].isParede() || 
                     grade[jogadorX][k].getDinossauro() != null || 
                     grade[jogadorX][k].getCaixa() != null) {
-                    return false; // A luz bateu em um obstáculo antes de chegar no alvo!
+                    return false; 
                 }
             }
         }
-        // 4. Verificando a linha de visão VERTICAL (Eixo Y igual)
         else if (jogadorY == alvoY) {
             int inicio = Math.min(jogadorX, alvoX);
             int fim = Math.max(jogadorX, alvoX);
@@ -517,12 +497,10 @@ public class Mapa {
                 if (grade[k][jogadorY].isParede() || 
                     grade[k][jogadorY].getDinossauro() != null || 
                     grade[k][jogadorY].getCaixa() != null) {
-                    return false; // A luz bateu em um obstáculo antes de chegar no alvo!
+                    return false; 
                 }
             }
         }
-
-        // Se o laço terminou e não esbarrou em nada no caminho, o alvo é visível!
         return true;
     }
 }
