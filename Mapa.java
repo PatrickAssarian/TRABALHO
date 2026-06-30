@@ -208,6 +208,7 @@ public class Mapa {
                     case 'a'-> { proximoY = proximoY - 1; }
                     case 'd'-> { proximoY = proximoY + 1; }
                     case 'x'-> {
+                        modoDebug = !modoDebug;
                         IO.println("\n MODO DEBUG " + (modoDebug ? "ATIVADO" : "DESATIVADO"));
                         mapa.ImprimirMapa(jogador);
                         continue; 
@@ -322,8 +323,13 @@ public class Mapa {
             IO.println("1 - Atacar");
             IO.println("2 - Fugir");
             
-            int acao = scanf.nextInt();
-            scanf.nextLine();
+            int acao = 0;
+            try {
+                acao = Integer.parseInt(scanf.nextLine());
+            } catch (NumberFormatException e) {
+                IO.println("Opção inválida! Você precisa digitar um número (1 ou 2).");
+                continue; 
+            }
             
             if (acao == 2) {
                 IO.println("Você conseguiu fugir do combate!");
