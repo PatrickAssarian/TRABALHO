@@ -191,7 +191,7 @@ public class Mapa {
                     IO.println("Use WASD para movimentar, X para Debug (ou 0 para sair):");
                 }
                 comando = scanf.next().charAt(0);
-                comando = Character.toLowerCase(comando); // Garante que letras maiúsculas também funcionem
+                comando = Character.toLowerCase(comando); 
                 scanf.nextLine();
 
                 if (comando == '0') {
@@ -487,10 +487,10 @@ public class Mapa {
             int inicio = Math.min(jogadorY, alvoY);
             int fim = Math.max(jogadorY, alvoY);
             
-            for (int k = inicio + 1; k < fim; k++) {
-                if (grade[jogadorX][k].isParede() || 
-                    grade[jogadorX][k].getDinossauro() != null || 
-                    grade[jogadorX][k].getCaixa() != null) {
+            for (int i = inicio + 1; i < fim; i++) {
+                if (grade[jogadorX][i].isParede() || 
+                    grade[jogadorX][i].getDinossauro() != null || 
+                    grade[jogadorX][i].getCaixa() != null) {
                     return false; 
                 }
             }
@@ -499,10 +499,10 @@ public class Mapa {
             int inicio = Math.min(jogadorX, alvoX);
             int fim = Math.max(jogadorX, alvoX);
             
-            for (int k = inicio + 1; k < fim; k++) {
-                if (grade[k][jogadorY].isParede() || 
-                    grade[k][jogadorY].getDinossauro() != null || 
-                    grade[k][jogadorY].getCaixa() != null) {
+            for (int i = inicio + 1; i < fim; i++) {
+                if (grade[i][jogadorY].isParede() || 
+                    grade[i][jogadorY].getDinossauro() != null || 
+                    grade[i][jogadorY].getCaixa() != null) {
                     return false; 
                 }
             }
