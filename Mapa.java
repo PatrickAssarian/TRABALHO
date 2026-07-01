@@ -99,7 +99,8 @@ public class Mapa {
                         System.out.print("[ ] "); 
                     }
                 } else {
-                    System.out.print("[ ] "); 
+                    System.out.print("[ ] ");
+                    
                 }
             }
             System.out.println(); 
@@ -188,13 +189,13 @@ public class Mapa {
                 if (jogador.getKitsMedicos() > 0) {
                     IO.println("Use WASD para mover, C para curar, X para Debug (ou 0 para sair):");
                 } else {
-                    IO.println("Use WASD para movimentar, X para Debug (ou 0 para sair):");
+                    IO.println("Use WASD para movimentar, X para Debug (ou 0 para sair):");// print somente para mostrar ao usuário
                 }
                 comando = scanf.next().charAt(0);
                 comando = Character.toLowerCase(comando); 
                 scanf.nextLine();
 
-                if (comando == '0') {
+                if (comando == '0') {//comando para parar o jogo
                     rodando = 0;
                     continue; 
                 }
@@ -202,7 +203,7 @@ public class Mapa {
                 int proximoX = jogador.getPosicaox();
                 int proximoY = jogador.getPosicaoy();
 
-                switch (comando) {
+                switch (comando) {//comandos para se mover
                     case 'w'-> { proximoX = proximoX - 1; }
                     case 's'-> { proximoX = proximoX + 1; }
                     case 'a'-> { proximoY = proximoY - 1; }
@@ -213,7 +214,7 @@ public class Mapa {
                         mapa.ImprimirMapa(jogador);
                         continue; 
                     }
-                    case 'c'-> {
+                    case 'c'-> {// se o jogador apertar C e tiver kit médico ele cura
                         if (jogador.getKitsMedicos() > 0) {
                             if (jogador.getSaude() < 5) {
                                 jogador.setSaude(5);
@@ -226,15 +227,17 @@ public class Mapa {
                             IO.println("Você não possui Kits Médicos no inventário!");
                         }
                     }
-                    default-> { IO.println("Comando inválido!"); }
+                    default-> { IO.println("Comando inválido!"); }// se apertar outro tipo de botão é inválido
                 }
+                //o jogo entra nessa verificação somente usando os comandos de movimentação
                 if (comando != 'c' && comando != 'x') { 
+                    //verifica se a posição seguinte não são os limites do mapa
                     if (proximoX >= 0 && proximoX < tamanho && proximoY >= 0 && proximoY < tamanho) {
-                        
+                        //verifica se a próxima posição não é uma parede
                        if (!grade[proximoX][proximoY].isParede()) {
                         int xAntigo = jogador.getPosicaox();
                         int yAntigo = jogador.getPosicaoy();
-                        
+                            //verifica se não tem um dinossauro na próxima posição
                             if (grade[proximoX][proximoY].getDinossauro() != null) {
                                 Dinossauro inimigo = grade[proximoX][proximoY].getDinossauro();
                                 boolean vitoria = iniciarCombate(jogador, inimigo, scanf);
@@ -249,7 +252,7 @@ public class Mapa {
                                 }   
                             } else {
                                 grade[xAntigo][yAntigo].setJogador(null);
-                                
+                                //verifica se na próxima posição tem uma caixa
                                 if (grade[proximoX][proximoY].getCaixa() != null) {
                                     CaixaSuprimentos caixa = grade[proximoX][proximoY].getCaixa();
                                     
@@ -323,7 +326,7 @@ public class Mapa {
             IO.println("1 - Atacar");
             IO.println("2 - Fugir");
             
-            int acao = 0;
+            int acao;
             try {
                 acao = Integer.parseInt(scanf.nextLine());
             } catch (NumberFormatException e) {
@@ -377,13 +380,14 @@ public class Mapa {
                         IO.println("Seus socos não fazem efeito na pele grossa do T-Rex! Você precisa de uma arma!"); 
                         danoCausado = 0;
                     } else if (jogador.isTemBastao()) {
-                        if (dadoAtaque > 5) {
+                        if (dadoAtaque > 5) {//se o dado tirar 6 o acerto é critico
                             IO.println("Choque Crítico! O bastão descarregou alta voltagem (+2 de dano)!");
                             danoCausado = 2;
-                        } else if (dadoAtaque == 1) {
+                        } else if (dadoAtaque == 1) {//se o dado tirar 1 o jogador erra o acerto
                             IO.println("Você errou o balanço do bastão elétrico e não causou dano!");
                             danoCausado = 0;
-                        } else {
+                        } else {// se não nenhum destas opções ele somente acerta e gera um dano normal
+
                             IO.println("O bastão elétrico atingiu o dinossauro (+1 de dano)!");
                             danoCausado = 1;
                         }
@@ -454,10 +458,10 @@ public class Mapa {
                 if (novoX >= 0 && novoX < tamanho && novoY >= 0 && novoY < tamanho) {
                     if (!grade[novoX][novoY].isParede() && grade[novoX][novoY].getDinossauro() == null) {
                         
-                        grade[xAtual][yAtual].setDinossauro(null);
+                        grade[xAtual][yAtual].setDinossauro(null);//elimina a ultima posição do dinossauro
                         dino.setPosicaox(novoX);
                         dino.setPosicaoy(novoY);
-                        grade[novoX][novoY].setDinossauro(dino);
+                        grade[novoX][novoY].setDinossauro(dino);//atualiza a posição dele
                         
                         if (novoX == jogador.getPosicaox() && novoY == jogador.getPosicaoy()) {
                             IO.println("\nALERTA: Um " + dino.getClass().getSimpleName() + " encontrou você!");
@@ -478,14 +482,14 @@ public class Mapa {
             }
         }
     }
-    private boolean estaNaLinhaDeVisao(int jogadorX, int jogadorY, int alvoX, int alvoY) {
+    private boolean estaNaLinhaDeVisao(int jogadorX, int jogadorY, int alvoX, int alvoY) {//alvo: é a célula que o método "imprimirMapa" está prestes a retornar para o usuário (desenho)
         if (jogadorX == alvoX && jogadorY == alvoY) return true;
 
         if (jogadorX != alvoX && jogadorY != alvoY) return false;
 
-        if (jogadorX == alvoX) {
-            int inicio = Math.min(jogadorY, alvoY);
-            int fim = Math.max(jogadorY, alvoY);
+        if (jogadorX == alvoX) {//varre o eixo y
+            int inicio = Math.min(jogadorY, alvoY);//retorna o menor valor dentre as posições selecionadas
+            int fim = Math.max(jogadorY, alvoY);//retorna o maior
             
             for (int i = inicio + 1; i < fim; i++) {
                 if (grade[jogadorX][i].isParede() || 
@@ -495,7 +499,7 @@ public class Mapa {
                 }
             }
         }
-        else if (jogadorY == alvoY) {
+        else if (jogadorY == alvoY) {//varre o eixo x
             int inicio = Math.min(jogadorX, alvoX);
             int fim = Math.max(jogadorX, alvoX);
             
