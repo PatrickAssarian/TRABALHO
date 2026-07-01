@@ -60,7 +60,7 @@ This project strictly adheres to Java OOP principles:
 
 ### Mechanics
 1. **Explore:** Move through the map to uncover the Fog of War.
-2. **Scavenge:** Find supply crates to equip weapons (like the Stun Baton) and restore health.
+2. **Scavenge:** Find supply crates to equip weapons (such as the stun baton, the Medkit, and the tranquilizer dart weapons) and restore health.
 3. **Survive:** Avoid or fight dinosaurs. Engaging a dinosaur triggers a dice-roll combat phase where your equipped items matter.
 
 ---
@@ -73,8 +73,17 @@ This project strictly adheres to Java OOP principles:
 ### Step-by-Step
 1. Clone this repository to your local machine:
    ```bash
-   git clone [INSERT-YOUR-REPOSITORY-LINK-HERE]
+   git clone https://github.com/PatrickAssarian/TRABALHO.git
+1. Navigate to the project folder:
+   ```bash
    cd [INSERT-FOLDER-NAME-HERE]
+2. Compile the Java files:
+   ```bash
    javac Main.java
-   java main.java
-  
+3. Run the main class to start the game:
+   ```bash
+   java Main.java
+## 👨‍💻 Author
+* Patrick Assarian da Luz
+* Undergraduate Student in Computer Engineering (5th Semester)
+* Federal University of Pelotas (UFPel)
